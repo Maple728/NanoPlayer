@@ -1,0 +1,11 @@
+# Build artifacts
+/NanoPlayer
+/NanoPlayer.app/
+/NanoPlayer.zip
+/.build/
+*.o
+*.swiftmodule
+DerivedData/
+
+# macOS
+.DS_Store
