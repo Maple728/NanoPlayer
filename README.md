@@ -1,12 +1,14 @@
 <div align="center">
 
+<img src="Resources/logo.png" width="128" alt="NanoPlayer logo">
+
 # NanoPlayer
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Apple%20Silicon-lightgrey.svg)](#requirements)
 [![Build](https://github.com/Maple728/NanoPlayer/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Maple728/NanoPlayer/actions/workflows/build.yml)
 
-**极简的 macOS 视频播放器，原生 Dolby Vision / HDR 直通，基于 mpv，专为 Apple Silicon 优化。**
+**极简的 macOS 视频播放器，原生 Dolby Vision / HDR 直通，基于 mpv，专为 Apple Silicon 优化。**<br>
 **A dead-simple macOS video player with native Dolby Vision & HDR passthrough. mpv-powered, Apple Silicon optimized.**
 
 `🎞️ Dolby Vision` · `🌈 HDR10 / HLG` · `⚡ VideoToolbox` · `📺 追剧连播 / Binge-watch`
@@ -25,7 +27,7 @@ NanoPlayer 是一个基于 [libmpv](https://github.com/mpv-player/mpv) 的极简
 
 ### ✨ 特性
 
-- 🎞️ **Dolby Vision 直通（核心能力）**：保留 `gpu-next` + `target-colorspace-hint` 渲染管线，**4K Dolby Vision** 在 XDR / HDR 屏上以真实高动态范围呈现，而非被压成 SDR。详见下文 **Dolby Vision / HDR** 一节。
+- 🎞️ **Dolby Vision 直通（核心能力）**：保留 `gpu-next` + `target-colorspace-hint` 渲染管线，**4K Dolby Vision** 在 XDR / HDR 屏上以真实高动态范围呈现，而非被 tone-map 成 SDR。详见下文 **Dolby Vision / HDR** 一节。
 - 🌈 **全 HDR 家族**：HDR10、HLG 同样直通；SDR 屏自动 tone-map。
 - ⚡ **Apple Silicon 硬解**：`hwdec=videotoolbox`，gpu-next 经 libplacebo / MoltenVK / Metal 渲染。
 - 📺 **追剧三件套**：打开任意一集 → **同目录整季按集数自动入列**（识别 `SxxExx`/`1x04`/`E04`/`第04集`）→ **从所选集起播**（用 `insert-at`，不重载不闪烁）→ **播完自动连播下一集**。
@@ -51,7 +53,7 @@ Decoder format: 3840x1634 videotoolbox[p010] dolbyvision/bt.2020/pq/full
 
 ### 📦 环境要求
 
-| | |
+| 项目 | 要求 |
 |---|---|
 | 系统 | macOS 12+（Apple Silicon） |
 | 工具链 | Xcode Command Line Tools（**无需完整 Xcode**）：`xcode-select --install` |
@@ -67,7 +69,7 @@ brew install mpv pkg-config
 open NanoPlayer.app
 ```
 
-`build-app.sh` 用 `swiftc` 直接编译（无需完整 Xcode）、组装 `NanoPlayer.app` 并 ad-hoc 签名。路径由 `pkg-config` 定位，故在 Apple Silicon（`/opt/homebrew`）与 Intel（`/usr/local`）上都能构建（各编各自架构）。此产物依赖本机 Homebrew libmpv，仅供本机运行。
+`build-app.sh` 用 `swiftc` 直接编译（无需完整 Xcode）、组装 `NanoPlayer.app` 并 ad-hoc 签名。路径由 `pkg-config` 定位，故在 Apple Silicon（`/opt/homebrew`）与 Intel（`/usr/local`）上都能构建（各自编译本机架构）。此产物依赖本机 Homebrew libmpv，仅供本机运行。
 
 ### 📦 分发（自包含）
 
@@ -97,7 +99,7 @@ open NanoPlayer.app
 
 ### 🧱 架构
 
-> **关键设计决策**：此 mpv 为 Vulkan/Metal-only，其 macOS 后端**不支持 `--wid` 把视频嵌入宿主视图**（强嵌会自建第二个窗口）。为保住 `gpu-next` + HDR 直通，NanoPlayer 让 **mpv 拥有那唯一的视频窗口**（含原生 OSC 与鼠标），宿主只用 libmpv 叠加行为；键盘由宿主捕获后转发为 mpv 命令（嵌入态下 mpv 窗口收不到键盘，IINA 等同款做法）。
+> **关键设计决策**：此 mpv 为 Vulkan/Metal-only，其 macOS 后端**不支持 `--wid` 把视频嵌入宿主视图**（强嵌会自建第二个窗口）。为保住 `gpu-next` + HDR 直通，NanoPlayer 让 **mpv 拥有那唯一的视频窗口**（含原生 OSC 与鼠标），宿主只用 libmpv 叠加行为；键盘由宿主捕获后转发为 mpv 命令（嵌入态下 mpv 窗口收不到键盘，与 IINA 等 libmpv 宿主做法一致）。
 
 ```
 Sources/
@@ -161,7 +163,7 @@ Decoder format: 3840x1634 videotoolbox[p010] dolbyvision/bt.2020/pq/full
 
 ### Requirements
 
-| | |
+| Item | Requirement |
 |---|---|
 | OS | macOS 12+ (Apple Silicon) |
 | Toolchain | Xcode Command Line Tools (**no full Xcode**): `xcode-select --install` |
@@ -212,7 +214,7 @@ ditto -c -k --keepParent NanoPlayer.app NanoPlayer.zip
 | `Space` | Play / pause |
 | `F` | Toggle fullscreen |
 | `→` / `←` | Seek ±5 s (exact) |
-| `⌘→` / `⌘←` | Next / previous episode (`>` / `<` also) |
+| `⌘→` / `⌘←` | Next / previous episode (`>` / `<` also work) |
 | `↑` / `↓` | Volume ±5　·　`M` mute |
 | Click / Double-click | Play-pause / fullscreen |
 | Mouse move | Reveal the native OSC |
