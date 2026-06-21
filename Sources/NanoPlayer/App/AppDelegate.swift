@@ -18,21 +18,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             player.open(fileArgs.map { URL(fileURLWithPath: $0) })
         }
 
-        // Internal test hooks (used by the verification harness; not user-facing).
-        if let s = ProcessInfo.processInfo.environment["NP_AUTOQUIT"], let secs = Double(s) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + secs) { self.player.quit() }
-        }
-        if let kc = ProcessInfo.processInfo.environment["NP_TESTKEY"], let code = UInt16(kc) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                if let ev = NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [],
-                                             timestamp: 0, windowNumber: 0, context: nil,
-                                             characters: " ", charactersIgnoringModifiers: " ",
-                                             isARepeat: false, keyCode: code) {
-                    NSApp.postEvent(ev, atStart: false)
-                }
-            }
-        }
-
         NSApp.activate(ignoringOtherApps: true)
     }
 
