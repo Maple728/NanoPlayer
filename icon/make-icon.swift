@@ -27,7 +27,7 @@ func renderIcon(pixels: Int) -> Data {
     ctx.saveGState()
     squircle.addClip()
 
-    // Vivid diagonal gradient (indigo -> magenta -> amber) — the "Vivid"/HDR feel.
+    // Vivid diagonal gradient (indigo -> magenta -> amber) for the HDR feel.
     let colors = [
         NSColor(srgbRed: 0.42, green: 0.18, blue: 0.97, alpha: 1).cgColor,
         NSColor(srgbRed: 0.92, green: 0.16, blue: 0.58, alpha: 1).cgColor,

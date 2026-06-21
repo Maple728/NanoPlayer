@@ -15,7 +15,7 @@ enum IconLock {
             let original = class_getInstanceMethod(
                 NSApplication.self, #selector(setter: NSApplication.applicationIconImage)),
             let replacement = class_getInstanceMethod(
-                NSApplication.self, #selector(NSApplication.vivid_setApplicationIconImage(_:)))
+                NSApplication.self, #selector(NSApplication.np_setApplicationIconImage(_:)))
         else { return }
         method_exchangeImplementations(original, replacement)
 
@@ -30,7 +30,7 @@ enum IconLock {
 
 extension NSApplication {
     /// After swizzling, this implementation backs `setApplicationIconImage:`.
-    @objc dynamic func vivid_setApplicationIconImage(_ image: NSImage?) {
+    @objc dynamic func np_setApplicationIconImage(_ image: NSImage?) {
         if IconLock.locked {
             if ProcessInfo.processInfo.environment["NP_LOG"] != nil {
                 NSLog("NP_DIAG dropped applicationIconImage change (kept NanoPlayer icon)")
@@ -38,6 +38,6 @@ extension NSApplication {
             return
         }
         // Swizzled: this selector now points at the original setter.
-        self.vivid_setApplicationIconImage(image)
+        self.np_setApplicationIconImage(image)
     }
 }
